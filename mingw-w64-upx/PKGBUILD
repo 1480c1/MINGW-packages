@@ -1,0 +1,37 @@
+# Maintainer: Christopher Degawa <ccom@randomderp.com>
+
+_realname=upx
+pkgbase=mingw-w64-${_realname}
+pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+pkgver=3.96
+pkgrel=0
+pkgdesc="the Ultimate Packer for eXecutables (mingw-w64)"
+arch=('any')
+url='https://github.com/upx/upx'
+license=('BSD')
+makedepends=()
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
+         "${MINGW_PACKAGE_PREFIX}-zlib"
+         "${MINGW_PACKAGE_PREFIX}-ucl")
+options=('strip')
+source=("https://github.com/upx/upx/releases/download/v${pkgver}/upx-${pkgver}-src.tar.xz")
+sha256sums=('47774df5c958f2868ef550fb258b97c73272cb1f44fe776b798e393465993714')
+
+build() {
+  make -C "${srcdir}/${_realname}-${pkgver}-src" all exeext=.exe
+}
+
+check() {
+  cd "${srcdir}/${_realname}-${pkgver}-src/src"
+  ./upx.exe -f -o check.exe upx.exe && rm -f check.exe
+}
+
+package() {
+  install -Dm755 "${srcdir}/${_realname}-${pkgver}-src/src/upx.exe" "${pkgdir}${MINGW_PREFIX}/bin/upx.exe"
+
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}-src/doc/upx.1" "${pkgdir}${MINGW_PREFIX}/share/man/man1/upx.1"
+  # License
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}-src/LICENSE" "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}-src/COPYING" "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING"
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}-src/README" "${pkgdir}${MINGW_PREFIX}/share/doc/${_realname}/README"
+}
