@@ -124,7 +124,7 @@ jobs:
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         continue-on-error: true
         with:
           name: UCRT64-packages
@@ -160,7 +160,7 @@ jobs:
     needs: build
 
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         id: artifacts
         continue-on-error: true
         with:
